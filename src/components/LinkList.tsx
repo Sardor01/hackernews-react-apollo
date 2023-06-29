@@ -1,11 +1,6 @@
 import { useQuery, gql } from '@apollo/client';
 import Link from './Link';
-
-interface Link {
-  id: string;
-  description: string;
-  url: string;
-}
+import type { FeedLink } from '../types';
 
 const FEED_QUERY = gql`
   {
@@ -13,16 +8,26 @@ const FEED_QUERY = gql`
       id
       links {
         id
-        createdAt
-        url
         description
+        url
+        createdAt
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
       }
     }
   }
 `;
 
 const LinkList = () => {
-  const { data } = useQuery<{ feed: { links: Link[] } }>(FEED_QUERY);
+  const { data } = useQuery<{ feed: { links: FeedLink[] } }>(FEED_QUERY);
 
   return (
     <div>
@@ -30,8 +35,8 @@ const LinkList = () => {
         <>
           {data.feed.links
             .filter((link) => link.description && link.url)
-            .map((link) => (
-              <Link key={link.id} link={link} />
+            .map((link, index) => (
+              <Link key={link.id} link={link} index={index} />
             ))}
         </>
       )}

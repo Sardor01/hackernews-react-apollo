@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="mx-auto w-full max-w-4xl">
       <Header />
-      <div className="bg-gray-100 p-4 pt-1">
+      <div className="bg-gray-100 p-4 pt-3">
         <Routes>
           <Route path="/" element={<LinkList />} />
           <Route path="/create" element={<CreateLink />} />
