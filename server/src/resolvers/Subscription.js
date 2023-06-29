@@ -1,15 +1,13 @@
-function newLinkSubscribe(parent, args, context, info) {
+function newLinkSubscribe(parent, args, context) {
   return context.pubsub.asyncIterator("NEW_LINK")
 }
 
 const newLink = {
   subscribe: newLinkSubscribe,
-  resolve: payload => {
-    return payload
-  },
+  resolve: payload => payload
 }
 
-function newVoteSubscribe(parent, args, context, info) {
+function newVoteSubscribe(parent, args, context) {
   return context.pubsub.asyncIterator("NEW_VOTE")
 }
 
