@@ -11,9 +11,13 @@ const Header = () => {
         <Link to="/" className="no-underline">
           Hacker News
         </Link>
+        <span className="mb-0.5">|</span>
+        <Link to="/search" className="no-underline">
+          Search
+        </Link>
+        <span className="mb-0.5">|</span>
         {authToken ? (
           <>
-            <span className="mb-0.5">|</span>
             <Link to="/create" className="no-underline">
               Submit
             </Link>
@@ -28,12 +32,9 @@ const Header = () => {
             </button>
           </>
         ) : (
-          <>
-            <span className="mb-0.5">|</span>
-            <Link to="/login" className="no-underline">
-              Login
-            </Link>
-          </>
+          <Link to="/login" className="no-underline">
+            Login
+          </Link>
         )}
       </div>
     </div>

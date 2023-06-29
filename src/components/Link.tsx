@@ -73,16 +73,13 @@ const Link = ({ link }: { link: FeedLink }) => {
         )}
       </div>
       <div className="flex-1">
-        <div>
-          {link.description}{' '}
-          {link.url ? (
-            <a href={link.url} target="_blank">
-              {link.url}
-            </a>
-          ) : (
-            ''
-          )}
-        </div>
+        {link.url ? (
+          <a href={link.url} target="_blank" className="block w-full">
+            {link.description}
+          </a>
+        ) : (
+          <div>{link.description}</div>
+        )}
         {
           <div className="text-sm text-gray-500">
             {link.votes.length} votes | {link.postedBy ? `by ${link.postedBy.name}` : ''}{' '}
