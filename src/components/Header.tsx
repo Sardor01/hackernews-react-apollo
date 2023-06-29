@@ -12,6 +12,14 @@ const Header = () => {
           Hacker News
         </Link>
         <span className="mb-0.5">|</span>
+        <Link to="/" className="no-underline">
+          New
+        </Link>
+        <span className="mb-0.5">|</span>
+        <Link to="/top" className="no-underline">
+          Top
+        </Link>
+        <span className="mb-0.5">|</span>
         <Link to="/search" className="no-underline">
           Search
         </Link>

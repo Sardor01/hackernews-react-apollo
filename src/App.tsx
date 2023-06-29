@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import LinkList from './components/LinkList';
 import CreateLink from './components/CreateLink';
@@ -11,10 +11,12 @@ function App() {
       <Header />
       <div className="mb-4 bg-gray-100 p-4 pt-3">
         <Routes>
-          <Route path="/" element={<LinkList />} />
+          <Route path="/" element={<Navigate replace to="/new/1" />} />
           <Route path="/create" element={<CreateLink />} />
           <Route path="/login" element={<Login />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/top" element={<LinkList />} />
+          <Route path="/new/:page" element={<LinkList />} />
         </Routes>
       </div>
     </div>
