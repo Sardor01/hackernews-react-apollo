@@ -1,7 +1,8 @@
-import { gql, useMutation } from '@apollo/client';
+import { type FetchResult, gql, useMutation } from '@apollo/client';
+import { FEED_QUERY } from '../queries';
 import { timeDifferenceForDate } from '../utils';
 import { AUTH_TOKEN } from '../constants';
-import type { FeedLink } from '../types.ts';
+import type { FeedLink, Vote } from '../types';
 
 const VOTE_MUTATION = gql`
   mutation VoteMutation($linkId: ID!) {
@@ -23,17 +24,43 @@ const VOTE_MUTATION = gql`
   }
 `;
 
-const Link = ({ link, index }: { link: FeedLink; index: number }) => {
+const Link = ({ link }: { link: FeedLink }) => {
   const authToken = localStorage.getItem(AUTH_TOKEN);
 
   const [vote] = useMutation(VOTE_MUTATION, {
     variables: {
       linkId: link.id,
     },
+    update: (cache, { data }: Omit<FetchResult<{ vote: Vote }>, 'context'>) => {
+      const queryResult = cache.readQuery<{ feed: { links: FeedLink[] } }>({
+        query: FEED_QUERY,
+      });
+
+      if (queryResult && data) {
+        const updatedLinks = queryResult.feed.links.map((feedLink) => {
+          if (feedLink.id === link.id) {
+            return {
+              ...feedLink,
+              votes: [...feedLink.votes, data.vote],
+            };
+          }
+          return feedLink;
+        });
+
+        cache.writeQuery({
+          query: FEED_QUERY,
+          data: {
+            feed: {
+              links: updatedLinks,
+            },
+          },
+        });
+      }
+    },
   });
 
   return (
-    <div className="flex items-start gap-1.5 border border-b-0 border-gray-500 p-1 last:border-b">
+    <li className="flex items-start gap-1.5 border border-b-0 border-gray-500 p-1 last:border-b">
       <div className="inline-flex flex-shrink-0 items-center">
         {authToken && (
           <button
@@ -44,7 +71,6 @@ const Link = ({ link, index }: { link: FeedLink; index: number }) => {
             ▲
           </button>
         )}
-        <span className="ml-1 text-gray-500">{index + 1}.</span>
       </div>
       <div className="flex-1">
         <div>
@@ -64,7 +90,7 @@ const Link = ({ link, index }: { link: FeedLink; index: number }) => {
           </div>
         }
       </div>
-    </div>
+    </li>
   );
 };
 

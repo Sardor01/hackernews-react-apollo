@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import { type FetchResult, gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { FEED_QUERY } from '../queries';
+import type { FeedLink } from '../types';
 
 const CREATE_LINK_MUTATION = gql`
   mutation PostMutation($description: String!, $url: String!) {
@@ -25,6 +27,22 @@ const CreateLink = () => {
     variables: {
       description: formState.description,
       url: formState.url,
+    },
+    update: (cache, { data }: Omit<FetchResult<{ post: FeedLink }>, 'context'>) => {
+      const queryResult = cache.readQuery<{ feed: { links: FeedLink[] } }>({
+        query: FEED_QUERY,
+      });
+
+      if (queryResult && data) {
+        cache.writeQuery({
+          query: FEED_QUERY,
+          data: {
+            feed: {
+              links: [data.post, ...queryResult.feed.links],
+            },
+          },
+        });
+      }
     },
     onCompleted: () => navigate('/'),
   });

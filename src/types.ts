@@ -1,4 +1,4 @@
-interface Vote {
+export interface Vote {
   id: string;
   user: { id: string };
 }
